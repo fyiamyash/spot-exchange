@@ -1,0 +1,18 @@
+{
+  "name": "websocketserver",
+  "module": "index.ts",
+  "type": "module",
+  "private": true,
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "@types/ws": "^8.18.1",
+    "dotenv": "^17.4.2",
+    "redis": "^6.0.0",
+    "ws": "^8.21.0"
+  }
+}
