@@ -39,21 +39,17 @@ export const TradeBox = () => {
     price: string,
   ) {
     console.log(orderId, market, side, price);
-    const resultOfDelete = await axios.delete(
-      "http://localhost:3000/cancelOrder",
-      {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-        data: {
-          orderId: orderId,
-          market: market,
-          side: side,
-          price: price,
-        },
+    await axios.delete("http://localhost:3000/cancelOrder", {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem("token")}`,
       },
-    );
-    console.log(await resultOfDelete);
+      data: {
+        orderId: orderId,
+        market: market,
+        side: side,
+        price: price,
+      },
+    });
   }
 
   useEffect(() => {
@@ -137,16 +133,16 @@ export const TradeBox = () => {
 
       {activeTab === "Order History" && (
         <div>
-          {openOrdersValue.length > 0 ? (
+          {orderHistoryValue.length > 0 ? (
             <div>
               <div className="sticky top-0 z-10 bg-white">
                 <OrdersTableHeader />
               </div>
               <div className="max-h-[180px] overflow-y-auto">
-                {orderHistoryValue.map((e, i) => {
+                {orderHistoryValue.map((e) => {
                   return (
                     <OrderComponent
-                      key={i}
+                      key={e.id}
                       market={e.market}
                       price={e.price}
                       quantity={e.quantity}
@@ -180,15 +176,13 @@ export const TradeBox = () => {
               <div className="max-h-[180px] overflow-y-auto">
                 {fillsValue.map((e, i) => {
                   return (
-                    <>
-                      <FillComponent
-                        key={i}
-                        market={e.market}
-                        price={e.price}
-                        quantity={e.quantity}
-                        createdAt={e.createdAt}
-                      />
-                    </>
+                    <FillComponent
+                      key={i}
+                      market={e.market}
+                      price={e.price}
+                      quantity={e.quantity}
+                      createdAt={e.createdAt}
+                    />
                   );
                 })}
               </div>

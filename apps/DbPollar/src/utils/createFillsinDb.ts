@@ -48,6 +48,28 @@ export function createFills(incomingFills: fillsType[]) {
             market: existingOrder.market,
           },
         });
+      } else if (
+        existingOrder.quantity -
+          existingOrder.filledQuantity -
+          element.quantity >
+        0
+      ) {
+        await prisma.orders.update({
+          where: {
+            id: existingOrder.id,
+          },
+          data: {
+            id: existingOrder.id,
+            userId: existingOrder.userId,
+            price: existingOrder.price,
+            quantity: existingOrder.quantity,
+            side: existingOrder.side,
+            filledQuantity: existingOrder.filledQuantity + element.quantity,
+            status: existingOrder.status,
+            createdAt: existingOrder.createdAt,
+            market: existingOrder.market,
+          },
+        });
       }
     } catch (err) {
       console.log("error while storing fills in the db", err);

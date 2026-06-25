@@ -36,10 +36,14 @@ export async function listeningToEngineResponse() {
       const orderHistory = JSON.parse(
         response[0].messages[0].message.orderHistory,
       );
-      if (status && fills && createdOrder) {
-        if (fills.length > 0) {
-          createFills(fills);
+      if (status) {
+        console.log("crate order----------------", orderHistory);
+        if (fills) {
+          if (fills.length > 0) {
+            createFills(fills);
+          }
         }
+
         createOrderInDb(orderHistory, createdOrder);
       }
       if (status && cancelOrder) {
