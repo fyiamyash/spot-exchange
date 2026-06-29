@@ -6,6 +6,15 @@ import { matchingEngine } from "../matchingEngine";
 import { freshbookForFrontEnd, OrderBooks } from "../store/orderbook";
 import { stripOrderBook } from "./orderFunction/stripOrderbook";
 
+import { S3Client, PutObjectCommand, Bucket$ } from "@aws-sdk/client-s3";
+
+const s3Object = new S3Client({
+  endpoint: "http://localhost:9000",
+  region: "us-east-1",
+  credentials: { accessKeyId: "admin", secretAccessKey: "password123" },
+  forcePathStyle: true,
+});
+
 const subscriber_to_order_coming_from_backend = createClient({ url: "" }).on(
   "err",
   (err) => {
@@ -47,10 +56,25 @@ export async function connectToReddisClient() {
   ]);
 }
 
+async function saveOrderBookToObjectStore() {
+  const saveData = new PutObjectCommand({
+    Bucket: "spot",
+    Key: `orderbook@${Date.now()}.json`,
+    Body: JSON.stringify(OrderBooks),
+    ContentType: "application/json",
+  });
+
+  await s3Object.send(saveData);
+}
+
 export async function listeningToBackendRequest() {
   console.log("listening to backend requests!");
 
   try {
+    setInterval(() => {
+      saveOrderBookToObjectStore();
+    }, 300000);
+
     const createGroup =
       await subscriber_to_order_coming_from_backend.xGroupCreate(
         envCustom.order_from_backend_to_Engine,

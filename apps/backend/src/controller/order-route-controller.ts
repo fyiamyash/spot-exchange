@@ -77,7 +77,7 @@ export async function cancelOrderFunction(
 export async function getOrderFunction(
   req: Request,
   res: Response,
-): Promise<any> {
+): Promise<void> {
   const currentOpenOrders = await prisma.orders.findMany({
     where: {
       userId: req.userId,
@@ -88,7 +88,10 @@ export async function getOrderFunction(
   res.send({ message: "Open Orders:", openOrders: currentOpenOrders });
 }
 
-export async function getOrderHistoryFunction(req: Request, res: Response) {
+export async function getOrderHistoryFunction(
+  req: Request,
+  res: Response,
+): Promise<void> {
   const orderHistoryForCurrentUser = await prisma.orders.findMany({
     where: {
       userId: req.userId,
@@ -101,7 +104,10 @@ export async function getOrderHistoryFunction(req: Request, res: Response) {
   });
 }
 
-export async function getFillsFunction(req: Request, res: Response) {
+export async function getFillsFunction(
+  req: Request,
+  res: Response,
+): Promise<void> {
   const fillForCurrentUser = await prisma.fills.findMany({
     where: {
       OR: [{ makerId: req.userId }, { takerId: req.userId }],
@@ -110,7 +116,10 @@ export async function getFillsFunction(req: Request, res: Response) {
   res.send({ Fills: fillForCurrentUser });
 }
 
-export async function addUserBalance(req: Request, res: Response) {
+export async function addUserBalance(
+  req: Request,
+  res: Response,
+): Promise<void> {
   const safeUserbalanceBody = addBalanceType.safeParse(req.body);
   if (!safeUserbalanceBody.success) {
     res
@@ -134,7 +143,7 @@ export async function addUserBalance(req: Request, res: Response) {
   res.json({ status: resp.status, message: resp.reason });
 }
 
-export async function getBalance(req: Request, res: Response) {
+export async function getBalance(req: Request, res: Response): Promise<void> {
   const userId = req.userId;
   if (!userId) {
     res.status(409).json({ message: "Invalid UserId" });
