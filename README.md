@@ -10,6 +10,8 @@ The core idea is to keep the API layer stateless while delegating all matching r
 
 # Architecture
 
+<img width="1092" height="591" alt="Screenshot 2026-07-18 at 9 01 32 PM" src="https://github.com/user-attachments/assets/64972f1a-1ca9-4a43-b3e7-0cd775e296e6" />
+
 # Components:
 
 # 1. Backend API Service
