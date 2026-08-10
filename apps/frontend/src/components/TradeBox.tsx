@@ -25,13 +25,22 @@ const EMPTY_STATE: Record<Tab, string> = {
 export const TradeBox = () => {
   const [activeTab, setActiveTab] = useState<Tab>("Open Orders");
   const { dataFromDb } = useGetDataFromDb();
+  const [toast, setToast] = useState("");
   const setfills = fillsStore((state) => state.setInitialFills);
   const fillsValue = fillsStore((s) => s.initialFills);
   const setOpneOrders = openOrdersStore((s) => s.setOpenOrders);
   const openOrdersValue = openOrdersStore((s) => s.initialOpenOrders);
   const setOrderHistory = orderHistoryStore((s) => s.setOrderHistory);
   const orderHistoryValue = orderHistoryStore((s) => s.initialOrders);
+  const [refresh, setRefresh] = useState(0);
 
+  function showToast(message: string) {
+    setToast(message);
+
+    setTimeout(() => {
+      setToast("");
+    }, 3000);
+  }
   async function onCancelHandler(
     orderId: string,
     market: string,
@@ -39,17 +48,27 @@ export const TradeBox = () => {
     price: string,
   ) {
     console.log(orderId, market, side, price);
-    await axios.delete("http://localhost:3000/cancelOrder", {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-      data: {
-        orderId: orderId,
-        market: market,
-        side: side,
-        price: price,
-      },
-    });
+    await axios
+      .delete("http://localhost:3000/cancelOrder", {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        data: {
+          orderId: orderId,
+          market: market,
+          side: side,
+          price: price,
+        },
+      })
+      .then((response) => {
+        if (response.status === 200) {
+          showToast("Order cancelled successfully");
+        }
+      })
+      .catch((error) => {
+        console.error("Cancel order failed:", error);
+        showToast("Failed to cancel order");
+      });
   }
 
   useEffect(() => {
@@ -64,7 +83,7 @@ export const TradeBox = () => {
       }
     };
     retrieveData();
-  }, [activeTab]);
+  }, [activeTab, refresh]);
 
   return (
     <div className="rounded-xl border border-gray-200 bg-white">
@@ -85,6 +104,27 @@ export const TradeBox = () => {
             )}
           </button>
         ))}
+        <button
+          className="w-8 rounded-md p-1 transition-all duration-150 hover:bg-slate-100 active:scale-90 active:bg-slate-200 h-10 mt-2"
+          onClick={() => {
+            setRefresh((prev) => prev + 1);
+          }}
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth="2.0"
+            stroke="currentColor"
+            className="size-5"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99"
+            />
+          </svg>
+        </button>
       </div>
 
       {activeTab === "Open Orders" && (
