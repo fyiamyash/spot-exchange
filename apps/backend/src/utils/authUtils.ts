@@ -19,7 +19,7 @@ export async function authMiddleware(
   const extractedToken = incomingHeader.split(" ")[1];
   if (extractedToken) {
     try {
-      const correctToken = await jwt.verify(extractedToken, envCustom.secret);
+      const correctToken = jwt.verify(extractedToken, envCustom.secret);
       if (correctToken as JwtPayload) {
         req.userId = (correctToken as JwtPayload).userId;
 

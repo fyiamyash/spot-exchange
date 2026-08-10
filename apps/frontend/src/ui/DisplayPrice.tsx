@@ -7,11 +7,11 @@ interface DisplayPriceProps {
 export const DisplayPrice = ({ title, price, type }: DisplayPriceProps) => {
   const formattedValue =
     type === "price"
-      ? `$${price.toLocaleString(undefined, {
+      ? `$${(price ?? 0).toLocaleString(undefined, {
           minimumFractionDigits: 2,
           maximumFractionDigits: 2,
         })}`
-      : price.toLocaleString();
+      : (price ?? 0).toLocaleString();
 
   return (
     <div className="w-30 h-12 flex flex-col items-center justify-center">

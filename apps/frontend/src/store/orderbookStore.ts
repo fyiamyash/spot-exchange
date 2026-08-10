@@ -19,3 +19,24 @@ export const orderBookStore = create<incomingOrderBookType>((set) => ({
     });
   },
 }));
+
+interface incomingFillsStoreInterface {
+  createdAt: string;
+  price: number;
+  quantity: number;
+}
+
+interface CandleStore {
+  fills: incomingFillsStoreInterface[];
+  updateFill: (data: incomingFillsStoreInterface) => void;
+}
+
+export const candlesStore = create<CandleStore>((set) => ({
+  fills: [],
+
+  updateFill: (data) => {
+    set((state) => ({
+      fills: [...state.fills, data],
+    }));
+  },
+}));

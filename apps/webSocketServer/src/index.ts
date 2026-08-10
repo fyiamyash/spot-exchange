@@ -21,16 +21,25 @@ wss.on("connection", (socket) => {
 
   try {
     socket.on("message", async (data) => {
-      const parsedRequest: wsRequest = JSON.parse(data.toString());
-      parsedRequestForDeletion = parsedRequest;
-      if (parsedRequest.type === "subscribe") {
-        addUserToSubscribersList(parsedRequest.payload.market, socket);
-        const fbook = await getFreshBook(parsedRequest.payload.market);
-        if (!fbook) {
-          socket.send("error while fetching the fresh book");
+      try {
+        const parsedRequest: wsRequest = JSON.parse(data.toString());
+        if (!parsedRequest) {
+          console.error("Invalid input sent to the websocket!");
+          return;
         }
-        socket.send(fbook!);
-        await getDelta(parsedRequest.payload.market);
+
+        parsedRequestForDeletion = parsedRequest;
+        if (parsedRequest.type === "subscribe") {
+          addUserToSubscribersList(parsedRequest.payload.market, socket);
+          const fbook = await getFreshBook(parsedRequest.payload.market);
+          if (!fbook) {
+            socket.send("error while fetching the fresh book");
+          }
+          socket.send(fbook!);
+          await getDelta(parsedRequest.payload.market);
+        }
+      } catch {
+        console.error("Wrong input ");
       }
     });
   } catch (e) {

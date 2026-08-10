@@ -110,10 +110,6 @@ export async function listeningToBackendRequest() {
       continue;
     }
     if (responseFromBackend) {
-      console.log(
-        "==== group response ----",
-        typeof responseFromBackend[0]!.messages[0].id,
-      );
       for (let data of responseFromBackend) {
         const messageId = responseFromBackend[0]!.messages[0].id;
         const correaltionId = data.messages[0].message.correaltionId;
@@ -121,8 +117,7 @@ export async function listeningToBackendRequest() {
         const orderFromBackend = JSON.parse(
           data.messages[0].message.orderForEngine,
         );
-        // checking the event:
-        // user operation
+
         if (
           event == "add_balance" ||
           event == "add_user" ||
@@ -162,6 +157,7 @@ export async function listeningToBackendRequest() {
                 correaltionId,
                 responseToBackend,
               },
+              { TRIM: { strategy: "MAXLEN", threshold: 20 } },
             );
           console.log(
             `sending response to backend with offsetID1: ${offSetId1}`,
@@ -175,10 +171,10 @@ export async function listeningToBackendRequest() {
               orderHistory,
               responseToBackend,
             },
+            { TRIM: { strategy: "MAXLEN", threshold: 20 } },
           );
 
           //acknowledging that we got the order :
-          console.log("ajshaksda", messageId);
           await subscriber_to_order_coming_from_backend.xAck(
             envCustom.order_from_backend_to_Engine,
             "backend-group",
@@ -194,17 +190,37 @@ export async function listeningToBackendRequest() {
 
           if (event === "create_order" || event === "cancel_order") {
             stripOrderBook(orderFromBackend.market);
-            const sendFbook = JSON.stringify(
-              freshbookForFrontEnd[orderFromBackend.market],
-            );
-            await publisher_to_webSocket_for_FrontEnd.set(
-              orderFromBackend.market,
-              sendFbook,
-            );
-            await publisher_to_webSocket_for_FrontEnd.publish(
-              orderFromBackend.market,
-              sendFbook,
-            );
+            let fillsForCandles = JSON.parse(responseToBackend).fills;
+            if (fillsForCandles) {
+              if (fillsForCandles.length < 0) {
+                fillsForCandles = {};
+              }
+              const sendFbookToFrontend =
+                freshbookForFrontEnd[orderFromBackend.market];
+
+              const finalresultForFrontEnd = {
+                fillsForCandles,
+                sendFbookToFrontend,
+              };
+              const sendFbook = JSON.stringify(finalresultForFrontEnd);
+              await publisher_to_webSocket_for_FrontEnd.set(
+                orderFromBackend.market,
+                sendFbook,
+              );
+              await publisher_to_webSocket_for_FrontEnd.publish(
+                orderFromBackend.market,
+                sendFbook,
+              );
+            }
+
+            // const sendFbook = JSON.stringify(
+            //   freshbookForFrontEnd[orderFromBackend.market],
+            // );
+
+            // await publisher_to_webSocket_for_FrontEnd.publish(
+            //   orderFromBackend.market,
+            //   sendFbook,
+            // );
           }
 
           console.log(

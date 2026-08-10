@@ -12,7 +12,11 @@ export const AssetBar = () => {
       <AssetName name={selectedAsset} />
 
       <div className="flex gap-10">
-        <DisplayPrice title="Last Trade" price={lastTradedPrice} type="price" />
+        <DisplayPrice
+          title="Last Trade"
+          price={lastTradedPrice ?? 0}
+          type="price"
+        />
         <DisplayPrice title="24h Volume" price={1219} type="label" />
         <ProfileDropdown />
       </div>

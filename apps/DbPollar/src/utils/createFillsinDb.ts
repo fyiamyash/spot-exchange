@@ -3,6 +3,8 @@ import { prisma } from "@repo/prismafordb";
 
 export function createFills(incomingFills: fillsType[]) {
   incomingFills.forEach(async (element) => {
+    const createdAtNewFormat = new Date(element.createdAt);
+    console.log("check the time", createdAtNewFormat);
     try {
       await prisma.fills.create({
         data: {
@@ -12,7 +14,6 @@ export function createFills(incomingFills: fillsType[]) {
           market: element.market,
           price: element.price,
           quantity: element.quantity,
-          createdAt: element.createdAt,
         },
       });
 

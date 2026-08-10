@@ -37,7 +37,7 @@ export function matchingEngine(
         return marketOrder(incomingOrder);
       }
     }
-  } else if ((ev = "cancel_order")) {
+  } else if (ev === "cancel_order") {
     let result = cancelOrder(incomingOrder);
 
     if (result == -1) {

@@ -55,7 +55,6 @@ export const TradeBox = () => {
   useEffect(() => {
     const retrieveData = async () => {
       const result = await dataFromDb(activeTab);
-      console.log(result);
       if (activeTab === "Fills") {
         setfills(result.Fills);
       } else if (activeTab === "Open Orders") {
