@@ -1,4 +1,5 @@
 import axios from "axios";
+import { sessionStore } from "../store/buttonStore";
 
 export function useOrder() {
   const placeOrder = async (
@@ -16,28 +17,43 @@ export function useOrder() {
       type,
     };
     console.log(incomingOrder);
-    const result = await axios.post(
-      "http://localhost:3000/createOrder",
-      incomingOrder,
-      {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
+    try {
+      const result = await axios.post(
+        "http://localhost:3000/createOrder",
+        incomingOrder,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
         },
-      },
-    );
+      );
 
-    return await result.data;
+      return await result.data;
+    } catch (error: any) {
+      if (error.response.status === 401) {
+        sessionStore.getState().setShowRelogin(true);
+        return;
+      }
+      console.error("Get balance failed:", error);
+    }
   };
 
   const getBalance = async () => {
     const sendToken = localStorage.getItem("token");
-
-    const result = await axios.get("http://localhost:3000/getBalance", {
-      headers: {
-        Authorization: `Bearer ${sendToken}`,
-      },
-    });
-    return await result.data;
+    try {
+      const result = await axios.get("http://localhost:3000/getBalance", {
+        headers: {
+          Authorization: `Bearer ${sendToken}`,
+        },
+      });
+      return result;
+    } catch (error: any) {
+      if (error.response.status === 401) {
+        sessionStore.getState().setShowRelogin(true);
+        return;
+      }
+      console.error("Get balance failed:", error);
+    }
   };
   return { placeOrder, getBalance };
 }

@@ -57,3 +57,13 @@ export const transitionStore = create<transitionStoreType>((set) => ({
     });
   },
 }));
+
+interface sessionState {
+  showRelogin: boolean;
+  setShowRelogin: (show: boolean) => void;
+}
+
+export const sessionStore = create<sessionState>((set) => ({
+  showRelogin: false,
+  setShowRelogin: (show) => set({ showRelogin: show }),
+}));

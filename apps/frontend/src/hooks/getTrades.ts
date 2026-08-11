@@ -1,4 +1,5 @@
 import axios from "axios";
+import { sessionStore } from "../store/buttonStore";
 
 type tabForData = "Open Orders" | "Fills" | "Order History";
 
@@ -6,31 +7,55 @@ export const useGetDataFromDb = () => {
   const dataFromDb = async (tabValue: tabForData) => {
     // try {
     if (tabValue === "Open Orders") {
-      const result = await axios.get("http://localhost:3000/getOrder", {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
-      return await result.data;
+      try {
+        const result = await axios.get("http://localhost:3000/getOrder", {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
+        return result.data;
+      } catch (error: any) {
+        if (error.response.status === 401) {
+          sessionStore.getState().setShowRelogin(true);
+          return;
+        }
+        console.error("Error fetching open orders from db!", error);
+      }
     } else if (tabValue === "Fills") {
-      const result = await axios.get("http://localhost:3000/getFills", {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
+      try {
+        const result = await axios.get("http://localhost:3000/getFills", {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        });
 
-      return await result.data;
+        return result.data;
+      } catch (error: any) {
+        if (error.response.status === 401) {
+          sessionStore.getState().setShowRelogin(true);
+          return;
+        }
+        console.error("Error fetching Fills from db", error);
+      }
     } else {
-      const result = await axios.get("http://localhost:3000/getOrderHistory", {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
-      return await result.data;
+      try {
+        const result = await axios.get(
+          "http://localhost:3000/getOrderHistory",
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          },
+        );
+        return result.data;
+      } catch (error: any) {
+        if (error.response.status === 401) {
+          sessionStore.getState().setShowRelogin(true);
+          return;
+        }
+        console.error("Error fetchin order history from db", error);
+      }
     }
-    // } catch (e) {
-    //   console.log("error in retrievin data", e);
-    // }
   };
   return { dataFromDb };
 };

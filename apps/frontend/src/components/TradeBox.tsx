@@ -12,6 +12,7 @@ import {
   OrderComponent,
 } from "../ui/EntryComponent";
 import axios from "axios";
+import { sessionStore } from "../store/buttonStore";
 
 const TABS = ["Open Orders", "Fills", "Order History"] as const;
 type Tab = (typeof TABS)[number];
@@ -25,7 +26,7 @@ const EMPTY_STATE: Record<Tab, string> = {
 export const TradeBox = () => {
   const [activeTab, setActiveTab] = useState<Tab>("Open Orders");
   const { dataFromDb } = useGetDataFromDb();
-  const [toast, setToast] = useState("");
+  const setShowRelogin = sessionStore((s) => s.setShowRelogin);
   const setfills = fillsStore((state) => state.setInitialFills);
   const fillsValue = fillsStore((s) => s.initialFills);
   const setOpneOrders = openOrdersStore((s) => s.setOpenOrders);
@@ -35,11 +36,7 @@ export const TradeBox = () => {
   const [refresh, setRefresh] = useState(0);
 
   function showToast(message: string) {
-    setToast(message);
-
-    setTimeout(() => {
-      setToast("");
-    }, 3000);
+    console.log("show toast", message);
   }
   async function onCancelHandler(
     orderId: string,
@@ -47,30 +44,32 @@ export const TradeBox = () => {
     side: string,
     price: string,
   ) {
-    console.log(orderId, market, side, price);
-    await axios
-      .delete("http://localhost:3000/cancelOrder", {
+    try {
+      const response = await axios.delete("http://localhost:3000/cancelOrder", {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },
         data: {
-          orderId: orderId,
-          market: market,
-          side: side,
-          price: price,
+          orderId,
+          market,
+          side,
+          price,
         },
-      })
-      .then((response) => {
-        if (response.status === 200) {
-          showToast("Order cancelled successfully");
-        }
-      })
-      .catch((error) => {
-        console.error("Cancel order failed:", error);
-        showToast("Failed to cancel order");
       });
-  }
 
+      if (response.status === 200) {
+        showToast("Order cancelled successfully");
+      }
+    } catch (error: any) {
+      if (error.response?.status === 401) {
+        setShowRelogin(true);
+        return;
+      }
+
+      console.error("Cancel order failed:", error);
+      showToast("Failed to cancel order");
+    }
+  }
   useEffect(() => {
     const retrieveData = async () => {
       const result = await dataFromDb(activeTab);

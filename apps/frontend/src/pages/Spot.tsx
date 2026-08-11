@@ -6,12 +6,14 @@ import { TradeBox } from "../components/TradeBox";
 import { useEffect } from "react";
 import { assetStore } from "../store/orders";
 import ChartComponent from "../components/ChartComponent";
+import { ReloginPopup } from "../components/ReloginPopup";
+import { sessionStore } from "../store/buttonStore";
 
 export const Spot = () => {
   const selectedAsset = assetStore((s) => s.symbol);
-
   const setFills = candlesStore((s) => s.updateFill);
 
+  const showRelogin = sessionStore((s) => s.showRelogin);
   useEffect(() => {
     const wss = new WebSocket("ws://localhost:8080");
 
@@ -78,6 +80,7 @@ export const Spot = () => {
           </div>
         </div>
       </div>
+      {showRelogin && <ReloginPopup />}
     </div>
   );
 };
