@@ -13,6 +13,7 @@
     "@repo/orderbook": "*",
     "axios": "^1.18.0",
     "lightweight-charts": "https://pkg.pr.new/lightweight-charts@master",
+    "notyf": "^3.10.0",
     "react": "^19.2.6",
     "react-dom": "^19.2.6",
     "react-router-dom": "^7.17.0",

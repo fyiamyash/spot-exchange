@@ -1,5 +1,6 @@
 import axios from "axios";
 import { sessionStore } from "../store/buttonStore";
+import { showToast } from "../components/Toast";
 
 export function useOrder() {
   const placeOrder = async (
@@ -27,6 +28,9 @@ export function useOrder() {
           },
         },
       );
+      if (result.status === 200) {
+              showToast("Order cancelled successfully");
+            }
 
       return await result.data;
     } catch (error: any) {

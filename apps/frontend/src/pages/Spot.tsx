@@ -8,6 +8,7 @@ import { assetStore } from "../store/orders";
 import ChartComponent from "../components/ChartComponent";
 import { ReloginPopup } from "../components/ReloginPopup";
 import { sessionStore } from "../store/buttonStore";
+import { Toast } from "../components/Toast";
 
 export const Spot = () => {
   const selectedAsset = assetStore((s) => s.symbol);
@@ -78,6 +79,7 @@ export const Spot = () => {
               <TradeBox />
             </div>
           </div>
+          <Toast />
         </div>
       </div>
       {showRelogin && <ReloginPopup />}

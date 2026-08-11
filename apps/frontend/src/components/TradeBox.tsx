@@ -13,6 +13,7 @@ import {
 } from "../ui/EntryComponent";
 import axios from "axios";
 import { sessionStore } from "../store/buttonStore";
+import { showToast } from "./Toast";
 
 const TABS = ["Open Orders", "Fills", "Order History"] as const;
 type Tab = (typeof TABS)[number];
@@ -35,9 +36,6 @@ export const TradeBox = () => {
   const orderHistoryValue = orderHistoryStore((s) => s.initialOrders);
   const [refresh, setRefresh] = useState(0);
 
-  function showToast(message: string) {
-    console.log("show toast", message);
-  }
   async function onCancelHandler(
     orderId: string,
     market: string,
@@ -58,7 +56,7 @@ export const TradeBox = () => {
       });
 
       if (response.status === 200) {
-        showToast("Order cancelled successfully");
+        showToast("Order cancelled successfully","success");
       }
     } catch (error: any) {
       if (error.response?.status === 401) {
@@ -67,7 +65,7 @@ export const TradeBox = () => {
       }
 
       console.error("Cancel order failed:", error);
-      showToast("Failed to cancel order");
+      showToast("Failed to cancel order","error");
     }
   }
   useEffect(() => {
