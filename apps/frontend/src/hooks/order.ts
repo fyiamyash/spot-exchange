@@ -29,8 +29,8 @@ export function useOrder() {
         },
       );
       if (result.status === 200) {
-              showToast("Order cancelled successfully");
-            }
+        showToast("Order Placed successfully");
+      }
 
       return await result.data;
     } catch (error: any) {

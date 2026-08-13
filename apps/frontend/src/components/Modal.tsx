@@ -32,6 +32,7 @@ export const Modal = () => {
     try {
       const result = await signIn(email, password);
       if (result) {
+        localStorage.setItem("token", result.authToken);
         setTransitioning(true);
         setTimeout(() => {
           setSignUpOpen();

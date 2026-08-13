@@ -9,24 +9,23 @@ import { stripOrderBook } from "./orderFunction/stripOrderbook";
 import { S3Client, PutObjectCommand, Bucket$ } from "@aws-sdk/client-s3";
 
 const s3Object = new S3Client({
-  endpoint: "http://localhost:9000",
+  endpoint: "http://minio:9000",
   region: "us-east-1",
   credentials: { accessKeyId: "admin", secretAccessKey: "password123" },
   forcePathStyle: true,
 });
 
-const subscriber_to_order_coming_from_backend = createClient({ url: "" }).on(
-  "err",
-  (err) => {
-    console.log(
-      "error connecting to the  subscriber_to_order_coming_from_backend",
-      err,
-    );
-  },
-);
+const subscriber_to_order_coming_from_backend = createClient({
+  url: envCustom.redisUrl,
+}).on("err", (err) => {
+  console.log(
+    "error connecting to the  subscriber_to_order_coming_from_backend",
+    err,
+  );
+});
 
 const publisher_to_response_from_engine_to_backend = createClient({
-  url: "",
+  url: envCustom.redisUrl,
 }).on("err", (err) => {
   console.log(
     "error connecting to the  subscriber_to_order_coming_from_backend",

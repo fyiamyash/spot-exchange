@@ -56,7 +56,7 @@ export async function signUpFunction(req: Request, res: Response) {
     },
   });
 
-  const authToken = generateToken(username);
+  const authToken = generateToken(userID);
   res.json({ message: "user signedUp successfully", authToken: authToken });
 }
 

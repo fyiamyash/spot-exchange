@@ -41,8 +41,10 @@ export const Spot = () => {
 
         setFills(fills);
       }
-
-      orderBookStore.setState(store.sendFbookToFrontend);
+      console.log("WebSocket message:", store);
+      if (store.sendFbookToFrontend) {
+        orderBookStore.setState(store.sendFbookToFrontend);
+      }
     };
 
     wss.onclose = () => {
