@@ -44,8 +44,12 @@ export const ProfileDropdown = () => {
   const getBalanceHanlder = async () => {
     console.log("get balace called ");
     const result = await getBalance();
-    setbalance(result.result);
-    console.log(result.result);
+    if (!result) {
+      console.error("error fetching the balance from user!");
+      return;
+    }
+    setbalance(result.data.result);
+    console.log(result.data.result);
   };
 
   const logOutHanlder = () => {

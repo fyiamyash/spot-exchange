@@ -23,3 +23,57 @@ services:
     command: server /mnt/data --console-address ":9001"
     volumes:
       - $HOME/minio/data:/mnt/data
+
+  backend:
+    build:
+      context: .
+      dockerfile: apps/backend/dockerFile
+    ports:
+      - 3000:3000
+    environment:
+      - PORT=3000
+      - REDIS_URL=redis://redis:6379
+      - DATABASE_URL=postgresql://postgres:password@postgres:5432/spot
+    depends_on:
+      - redis
+      - postgres
+      - minio
+
+  frontend:
+    build:
+      context: .
+      dockerfile: apps/frontend/dockerFile
+    ports:
+      - 5173:5173
+
+  matching-engine:
+    build:
+      context: .
+      dockerfile: apps/matchingEngine/dockerFile
+    environment:
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      - redis
+
+  db-pollar:
+    build:
+      context: .
+      dockerfile: apps/DbPollar/dockerFile
+    ports:
+      - 3001:3000
+    environment:
+      - REDIS_URL=redis://redis:6379
+      - DATABASE_URL=postgresql://postgres:password@postgres:5432/spot
+    depends_on:
+      - redis
+      - postgres
+
+  websocket:
+    build:
+      context: .
+      dockerfile: apps/webSocketServer/dockerFile
+    ports:
+      - 8080:8080
+    environment:
+      - REDIS_URL=redis://redis:6379
+      - DATABASE_URL=postgresql://postgres:password@postgres:5432/spot

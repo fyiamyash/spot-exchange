@@ -1,4 +1,4 @@
-import { string, z } from "zod";
+import { z } from "zod";
 
 export const userBodyType = z.object({
   username: z.string().min(3).max(20),
