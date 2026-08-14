@@ -61,6 +61,7 @@ export async function signUpFunction(req: Request, res: Response) {
 }
 
 export async function loginFunction(req: Request, res: Response) {
+  console.log("here 1", req.body);
   const safeBody = userBodyType.safeParse(req.body);
   if (!safeBody.success) {
     res.status(411).json({ message: "Invalid body type", err: safeBody.error });
@@ -73,6 +74,7 @@ export async function loginFunction(req: Request, res: Response) {
       username: username,
     },
   });
+  console.log("here 2", userExist);
   if (!userExist) {
     res.status(403).json({ message: "Invalid username" });
     return;

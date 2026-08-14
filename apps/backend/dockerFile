@@ -18,5 +18,11 @@ RUN bun install --frozen-lockfile
 
 EXPOSE 3000
 
-CMD [ "bun", "apps/backend/src/index.ts" ]
+# CMD [ "bun", "apps/backend/src/index.ts" ]
+# CMD ["sh", "-c", "bunx prisma migrate deploy --config /app/packages/prismaForDB/prisma.config.ts && exec bun apps/backend/src/index.ts"]
 
+RUN bun install --frozen-lockfile
+
+EXPOSE 3000
+
+CMD ["sh", "-c", "bunx prisma migrate deploy --config /app/packages/prismaForDB/prisma.config.ts && exec bun apps/backend/src/index.ts"]

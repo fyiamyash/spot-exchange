@@ -11,6 +11,8 @@ services:
       - POSTGRES_PASSWORD=password
       - POSTGRES_USER=postgres
       - POSTGRES_DB=spot
+    volumes:
+      - $HOME/postgres_data/data:/mnt/data
 
   minio:
     image: minio/minio
