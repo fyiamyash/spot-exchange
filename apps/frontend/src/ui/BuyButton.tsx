@@ -35,11 +35,13 @@ export const BuyButton = () => {
 
 export const ButtonForBuySellSection = () => {
   const { placeOrder } = useOrder();
+
   const orderSide = buySellButtonStore((state) => state.buySell);
   const orderType = orderTypeStore((s) => s.otype);
   const price = priceStore((s) => s.price);
   const quantity = quantityStore((s) => s.quantity);
   const market = assetStore((s) => s.symbol);
+  const isValid = Number(price) > 0 && Number(quantity) > 0;
 
   function orderHandler(
     market: string,
@@ -59,7 +61,8 @@ export const ButtonForBuySellSection = () => {
   }
   return (
     <button
-      className="w-full h-13 bg-black text-white font-medium text-lg rounded-full hover:bg-neutral-800 transition-colors mt-2"
+      disabled={!isValid}
+      className="w-full h-13 bg-neutral-800  text-white font-medium text-lg rounded-full hover:bg-neutral-800 transition-colors "
       onClick={() => {
         orderHandler(market, price, quantity, orderSide, orderType);
       }}

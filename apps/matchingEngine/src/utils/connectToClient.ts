@@ -70,9 +70,9 @@ export async function listeningToBackendRequest() {
   console.log("listening to backend requests!");
 
   try {
-    setInterval(() => {
-      saveOrderBookToObjectStore();
-    }, 300000);
+    // setInterval(() => {
+    //   saveOrderBookToObjectStore();
+    // }, 300000);
 
     const createGroup =
       await subscriber_to_order_coming_from_backend.xGroupCreate(

@@ -29,6 +29,7 @@ export function userOperations(ev: userEvent, incomingUser: userType) {
   } else if (ev === "get_userBalance") {
     console.log("--------------Get balance called");
     let result = getBalance(incomingUser.userId);
+    console.log(result);
     if (result === -1) {
       return { status: false, reason: "User doesn't exist!" };
     } else {

@@ -32,6 +32,10 @@ export const ProfileDropdown = () => {
     return () => document.removeEventListener("mousedown", handler);
   }, []);
 
+  const formatNum = (value: number | string | undefined | null) => {
+    const num = Number(value ?? 0);
+    return Number.isFinite(num) ? num.toFixed(2) : "0.00";
+  };
   const handleAddBalance = () => {
     const num = Number(amount);
     if (!num || num <= 0) return;
@@ -44,12 +48,15 @@ export const ProfileDropdown = () => {
   const getBalanceHanlder = async () => {
     console.log("get balace called ");
     const result = await getBalance();
-    if (!result) {
-      console.error("error fetching the balance from user!");
-      return;
+    // if (!result) {
+    //   console.error("error fetching the balance from user!");
+    //   return;
+    // }
+    console.log("helloo", result?.data);
+    if (result?.data.result) {
+      setbalance(result.data.result);
+      console.log(result.data);
     }
-    setbalance(result.data.result);
-    console.log(result.data.result);
   };
 
   const logOutHanlder = () => {
@@ -133,7 +140,7 @@ export const ProfileDropdown = () => {
                 USDT
               </span>
               <span className="text-sm text-neutral-500">
-                {Number(balance["USD"]?.available)}
+                {formatNum(balance["USD"]?.available)}
               </span>
             </div>
           </div>

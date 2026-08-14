@@ -34,7 +34,7 @@ export const TradeBox = () => {
   const openOrdersValue = openOrdersStore((s) => s.initialOpenOrders);
   const setOrderHistory = orderHistoryStore((s) => s.setOrderHistory);
   const orderHistoryValue = orderHistoryStore((s) => s.initialOrders);
-  const [refresh, setRefresh] = useState(0);
+  const [refresh] = useState(0);
 
   async function onCancelHandler(
     orderId: string,
@@ -56,7 +56,7 @@ export const TradeBox = () => {
       });
 
       if (response.status === 200) {
-        showToast("Order cancelled successfully","success");
+        showToast("Order cancelled successfully", "success");
       }
     } catch (error: any) {
       if (error.response?.status === 401) {
@@ -65,12 +65,14 @@ export const TradeBox = () => {
       }
 
       console.error("Cancel order failed:", error);
-      showToast("Failed to cancel order","error");
+      showToast("Failed to cancel order", "error");
     }
   }
+
   useEffect(() => {
     const retrieveData = async () => {
       const result = await dataFromDb(activeTab);
+      console.log(result);
       if (activeTab === "Fills") {
         setfills(result.Fills);
       } else if (activeTab === "Open Orders") {
@@ -82,46 +84,40 @@ export const TradeBox = () => {
     retrieveData();
   }, [activeTab, refresh]);
 
+  const tabCount = (tab: Tab) => {
+    if (tab === "Open Orders") return openOrdersValue.length;
+    if (tab === "Fills") return fillsValue.length;
+    return orderHistoryValue.length;
+  };
+
   return (
     <div className="rounded-xl border border-gray-200 bg-white">
-      <div className="flex gap-7 border-b border-gray-200 px-5">
-        {TABS.map((tab) => (
-          <button
-            key={tab}
-            onClick={() => setActiveTab(tab)}
-            className={`relative py-4 text-[15px] font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-300 rounded-sm ${
-              activeTab === tab
-                ? "text-gray-900"
-                : "text-gray-400 hover:text-gray-600"
-            }`}
-          >
-            {tab}
-            {activeTab === tab && (
-              <span className="absolute inset-x-0 -bottom-px h-[2px] bg-gray-900" />
-            )}
-          </button>
-        ))}
-        <button
-          className="w-8 rounded-md p-1 transition-all duration-150 hover:bg-slate-100 active:scale-90 active:bg-slate-200 h-10 mt-2"
-          onClick={() => {
-            setRefresh((prev) => prev + 1);
-          }}
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth="2.0"
-            stroke="currentColor"
-            className="size-5"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99"
-            />
-          </svg>
-        </button>
+      <div className="flex items-center gap-2 border-b border-gray-200 px-4 py-3">
+        <div className="flex items-center gap-1">
+          {TABS.map((tab) => {
+            const isActive = activeTab === tab;
+            const count = tabCount(tab);
+
+            return (
+              <button
+                key={tab}
+                onClick={() => setActiveTab(tab)}
+                className={`flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[14px] font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-gray-300 ${
+                  isActive
+                    ? "bg-gray-100 text-gray-900"
+                    : "text-gray-500 hover:text-gray-700"
+                }`}
+              >
+                {tab}
+                {isActive && count > 0 && (
+                  <span className="flex h-5 w-5 items-center justify-center rounded-full bg-white text-[12px] font-semibold text-gray-700 shadow-sm">
+                    {count}
+                  </span>
+                )}
+              </button>
+            );
+          })}
+        </div>
       </div>
 
       {activeTab === "Open Orders" && (
