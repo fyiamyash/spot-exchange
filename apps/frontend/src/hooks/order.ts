@@ -1,6 +1,7 @@
 import axios from "axios";
 import { sessionStore } from "../store/buttonStore";
 import { showToast } from "../components/Toast";
+import { envCustom } from "./envCustom";
 
 export function useOrder() {
   const placeOrder = async (
@@ -20,7 +21,7 @@ export function useOrder() {
     console.log(incomingOrder);
     try {
       const result = await axios.post(
-        "http://backend:3000/createOrder",
+        `${envCustom.axios_prefix}/createOrder`,
         incomingOrder,
         {
           headers: {
@@ -45,7 +46,7 @@ export function useOrder() {
   const getBalance = async () => {
     const sendToken = localStorage.getItem("token");
     try {
-      const result = await axios.get("http://backend:3000/getBalance", {
+      const result = await axios.get(`${envCustom.axios_prefix}/getBalance`, {
         headers: {
           Authorization: `Bearer ${sendToken}`,
         },

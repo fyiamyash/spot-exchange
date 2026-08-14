@@ -14,6 +14,7 @@ import {
 import axios from "axios";
 import { sessionStore } from "../store/buttonStore";
 import { showToast } from "./Toast";
+import { envCustom } from "../hooks/envCustom";
 
 const TABS = ["Open Orders", "Fills", "Order History"] as const;
 type Tab = (typeof TABS)[number];
@@ -43,17 +44,20 @@ export const TradeBox = () => {
     price: string,
   ) {
     try {
-      const response = await axios.delete("http://backend:3000/cancelOrder", {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
+      const response = await axios.delete(
+        `${envCustom.axios_prefix}/cancelOrder`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+          data: {
+            orderId,
+            market,
+            side,
+            price,
+          },
         },
-        data: {
-          orderId,
-          market,
-          side,
-          price,
-        },
-      });
+      );
 
       if (response.status === 200) {
         showToast("Order cancelled successfully", "success");
