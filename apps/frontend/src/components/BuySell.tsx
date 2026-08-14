@@ -11,7 +11,7 @@ export const BuySell = () => {
   const balance = useBalanceStore((s) => s.balance);
 
   const total = (Number(price) || 0) * (Number(quantity) || 0);
-  const isValid = Number(price) > 0 && Number(quantity) > 0;
+
   return (
     <div className="flex flex-col justify-center gap-2.5">
       <div className="border border-neutral-300 h-10 w-full rounded-md">
