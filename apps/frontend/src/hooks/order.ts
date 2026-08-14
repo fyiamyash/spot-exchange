@@ -20,7 +20,7 @@ export function useOrder() {
     console.log(incomingOrder);
     try {
       const result = await axios.post(
-        "http://localhost:3000/createOrder",
+        "http://backend:3000/createOrder",
         incomingOrder,
         {
           headers: {
@@ -45,7 +45,7 @@ export function useOrder() {
   const getBalance = async () => {
     const sendToken = localStorage.getItem("token");
     try {
-      const result = await axios.get("http://localhost:3000/getBalance", {
+      const result = await axios.get("http://backend:3000/getBalance", {
         headers: {
           Authorization: `Bearer ${sendToken}`,
         },

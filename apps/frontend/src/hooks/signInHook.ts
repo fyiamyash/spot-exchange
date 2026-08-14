@@ -3,7 +3,7 @@ import axios from "axios";
 export const userSignIn = () => {
   const signIn = async (username: string, password: string) => {
     const response = axios.post(
-      "http://localhost:3000/signup",
+      "http://backend:3000/signup",
       {
         username,
         password,

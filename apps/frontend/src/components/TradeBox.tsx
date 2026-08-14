@@ -43,7 +43,7 @@ export const TradeBox = () => {
     price: string,
   ) {
     try {
-      const response = await axios.delete("http://localhost:3000/cancelOrder", {
+      const response = await axios.delete("http://backend:3000/cancelOrder", {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("token")}`,
         },

@@ -8,7 +8,7 @@ export const useGetDataFromDb = () => {
     // try {
     if (tabValue === "Open Orders") {
       try {
-        const result = await axios.get("http://localhost:3000/getOrder", {
+        const result = await axios.get("http://backend:3000/getOrder", {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
@@ -23,7 +23,7 @@ export const useGetDataFromDb = () => {
       }
     } else if (tabValue === "Fills") {
       try {
-        const result = await axios.get("http://localhost:3000/getFills", {
+        const result = await axios.get("http://backend:3000/getFills", {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
@@ -39,14 +39,11 @@ export const useGetDataFromDb = () => {
       }
     } else {
       try {
-        const result = await axios.get(
-          "http://localhost:3000/getOrderHistory",
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
+        const result = await axios.get("http://backend:3000/getOrderHistory", {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
-        );
+        });
         return result.data;
       } catch (error: any) {
         if (error.response.status === 401) {
