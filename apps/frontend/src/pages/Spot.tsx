@@ -10,6 +10,7 @@ import { ReloginPopup } from "../components/ReloginPopup";
 import { sessionStore } from "../store/buttonStore";
 import { Toast } from "../components/Toast";
 import { TradeBox } from "../components/TradeBox";
+import { envCustom } from "../hooks/envCustom";
 
 export const Spot = () => {
   const selectedAsset = assetStore((s) => s.symbol);
@@ -17,7 +18,7 @@ export const Spot = () => {
 
   const showRelogin = sessionStore((s) => s.showRelogin);
   useEffect(() => {
-    const wss = new WebSocket("ws://localhost:8080");
+    const wss = new WebSocket(envCustom.axios_ws_prefix);
 
     const messagePayLoad = {
       type: "subscribe",
@@ -58,36 +59,6 @@ export const Spot = () => {
   }, [selectedAsset, setFills]);
 
   return (
-    // <div className="h-[100dvh] w-full overflow-hidden bg-slate-50">
-    //   <div className="flex h-full min-h-0 flex-col gap-2 p-2 sm:p-3">
-    //     <div className="shrink-0">
-    //       <AssetBar />
-    //     </div>
-
-    //     <div className="min-h-0 flex-1 overflow-y-auto md:overflow-hidden">
-    //       <div className="grid grid-cols-1 gap-3 pb-3 md:h-full md:grid-cols-7 md:gap-2 md:pb-0">
-    //         <div className="order-1 h-[500px] min-h-0 overflow-hidden rounded-lg border border-slate-300 bg-white md:order-2 md:col-span-2 md:h-full">
-    //           <OrderBook />
-    //         </div>
-
-    //         <div className="order-2 h-[500px] min-h-0 overflow-hidden rounded-lg border border-slate-300 bg-white p-3 md:order-3 md:col-span-2 md:h-full">
-    //           <BuySell />
-    //         </div>
-
-    //         <div className="order-3 h-[500px] min-h-0 overflow-hidden rounded-lg border border-slate-300 bg-white md:order-1 md:col-span-3 md:h-full">
-    //           <ChartComponent />
-    //         </div>
-
-    //         <div className="order-4 min-h-[300px] overflow-hidden rounded-lg border border-slate-300 bg-white md:col-span-7 md:h-[220px]">
-    //           <TradeBox />
-    //         </div>
-    //       </div>
-    //       <Toast />
-    //     </div>
-    //   </div>
-    //   {showRelogin && <ReloginPopup />}
-    // </div>
-
     <div className="h-[100dvh] w-full overflow-hidden bg-slate-50">
       <div className="flex h-full min-h-0 flex-col gap-2 p-2 sm:p-3">
         <div className="shrink-0">
