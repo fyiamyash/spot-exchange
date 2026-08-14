@@ -1,3 +1,3 @@
 export const envCustom = {
-  axios_prefix: import.meta.env.AXIOS_PRE,
+  axios_prefix: import.meta.env.VITE_AXIOS_PRE,
 };
