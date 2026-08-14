@@ -41,12 +41,12 @@ services:
       - postgres
       - minio
 
-  frontend:
-    build:
-      context: .
-      dockerfile: apps/frontend/dockerFile
-    ports:
-      - 5173:5173
+  # frontend:
+  #   build:
+  #     context: .
+  #     dockerfile: apps/frontend/dockerFile
+  #   ports:
+  #     - 5173:5173
 
   matching-engine:
     build:
